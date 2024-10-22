@@ -65,3 +65,19 @@ export async function deleteCampaignImages(imageIds) {
     return null;
   }
 }
+
+export async function createCampaign(campaign) {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/campaign/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(campaign),
+    });
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    return null;
+  }
+}

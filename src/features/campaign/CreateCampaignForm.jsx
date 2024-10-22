@@ -10,9 +10,12 @@ import {
 } from "@/components/ui/popover";
 import FormRow from "@/ui/FormRow";
 import Input from "@/ui/Input";
+import LecturerDialog from "./LecturerDialog";
+import { useCreateCampaign } from "./useCreateCampaign";
 
 function CreateCampaignForm() {
-  const { register, handleSubmit, control, getValues, formState } = useForm({
+  const { mutate: create, isPending } = useCreateCampaign();
+  const { register, handleSubmit, control, formState, reset } = useForm({
     defaultValues: {},
   });
   const { errors } = formState;
@@ -22,13 +25,32 @@ function CreateCampaignForm() {
     control,
     rules: {
       required: "Ngày đóng chiến dịch không được để trống",
+      validate: (value) =>
+        +value > new Date() || "Ngày đóng chiến dịch phải sau ngày hôm nay",
+    },
+  });
+
+  const { field: lecturerField } = useController({
+    name: "lecturer",
+    control,
+    rules: {
+      required: "Giảng viên không được để trống",
     },
   });
 
   function onSubmit(data) {
-    console.log({
+    const requestData = {
       ...data,
+      closeDate: null,
       closeDateStr: data.closeDate.toISOString(),
+      targetAmount: Number(data.targetAmount),
+      postId: Number(data.postId) || null,
+      createdBy: 1, // fix later
+    };
+    create(requestData, {
+      onSuccess: () => {
+        reset();
+      },
     });
   }
 
@@ -45,6 +67,7 @@ function CreateCampaignForm() {
           {...register("name", {
             required: "Tên chiến dịch không được để trống",
           })}
+          disabled={isPending}
         />
       </FormRow>
       <FormRow label="Mô tả" error={errors?.description?.message}>
@@ -55,6 +78,7 @@ function CreateCampaignForm() {
           {...register("description", {
             required: "Mô tả không được để trống",
           })}
+          disabled={isPending}
         />
       </FormRow>
       <FormRow label="Mục tiêu" error={errors?.targetAmount?.message}>
@@ -73,6 +97,7 @@ function CreateCampaignForm() {
               message: "Số tiền quyên góp ít nhất là 1,000 đ",
             },
           })}
+          disabled={isPending}
         />
       </FormRow>
       <div className="flex flex-col gap-2 md:grid md:grid-cols-[10rem,1fr,1.2fr] md:items-center md:gap-4">
@@ -84,10 +109,11 @@ function CreateCampaignForm() {
             <Button
               variant={"outline"}
               className={cn(
-                "justify-start text-left font-normal",
+                "justify-start text-left font-normal disabled:bg-slate-200 disabled:text-slate-500",
                 !closeDateField.value && "text-muted-foreground",
               )}
               id="closeDate"
+              disabled={isPending}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {closeDateField.value ? (
@@ -128,20 +154,41 @@ function CreateCampaignForm() {
               message: "Mã bài viết không hợp lệ",
             },
           })}
+          disabled={isPending}
         />
       </FormRow>
-      <FormRow label="Giảng viên phụ trách" error={errors?.lecturerId?.message}>
-        <Input
-          type="text"
-          name="lecturerId"
-          id="lecturerId"
-          {...register("lecturerId", {
-            required: "Giảng viên không được để trống",
-          })}
-        />
-      </FormRow>
+      <div className="flex flex-col gap-2 md:grid md:grid-cols-[10rem,1fr,1.2fr] md:items-center md:gap-4">
+        <label htmlFor="lecturerName" className="font-semibold">
+          Giảng viên phụ trách
+        </label>
+        <div className="flex items-center gap-3">
+          <Input
+            type="text"
+            name="lecturerName"
+            id="lecturerName"
+            className="grow"
+            defaultValue={lecturerField.value ? lecturerField.value.name : ""}
+            onChange={lecturerField.onChange}
+            onBlur={lecturerField.onBlur}
+            ref={lecturerField.ref}
+            readOnly
+            disabled={isPending}
+          />
+          <LecturerDialog
+            currentLecturer={lecturerField.value}
+            onLecturerChosen={lecturerField.onChange}
+            disabled={isPending}
+          />
+        </div>
+        {errors?.lecturer?.message && (
+          <span className="text-red-700">{errors?.lecturer?.message}</span>
+        )}
+      </div>
       <div>
-        <button className="rounded-md border-[1px] border-solid border-slate-300 px-3 py-1.5">
+        <button
+          className="rounded-md border-[1px] border-solid border-slate-300 px-4 py-1.5 disabled:bg-slate-200 disabled:text-slate-500"
+          disabled={isPending}
+        >
           Tạo
         </button>
       </div>
