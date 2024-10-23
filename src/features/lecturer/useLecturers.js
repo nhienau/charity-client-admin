@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import { getCampaigns } from '@/services/apiCampaign';
+import { getLecturers } from '@/services/apiLecturer';
 
-export function useCampaigns() {
+export function useLecturers() {
     const [searchParams] = useSearchParams();
 
     const pageNoParam = Number.parseInt(searchParams.get('page'));
@@ -11,8 +11,8 @@ export function useCampaigns() {
     const query = searchParams.get('query') ?? '';
 
     const { isLoading, data, isFetching } = useQuery({
-        queryKey: ['campaigns', query, pageNo],
-        queryFn: () => getCampaigns(query, pageNo),
+        queryKey: ['lecturers', query, pageNo],
+        queryFn: () => getLecturers(query, pageNo),
         throwOnError: true,
     });
     return { isLoading, data, isFetching };
