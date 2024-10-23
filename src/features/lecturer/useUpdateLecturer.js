@@ -12,7 +12,7 @@ export function useUpdateLecturer() {
         isError,
         isFetching,
     } = useMutation({
-        mutationFn: ({ name }) => updateLecturerApi(name),
+        mutationFn: ({ name, id }) => updateLecturerApi(name, id),
         onSuccess: () => {
             queryClient.invalidateQueries(['lecturers']);
             toast.success('Cập nhật giảng viên thành công!');

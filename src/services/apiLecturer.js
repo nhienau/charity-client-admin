@@ -41,14 +41,14 @@ export async function addLecturer(lecturerData) {
     }
 }
 
-export async function updateLecturer(lecturerData, id) {
+export async function updateLecturer(name, id) {
     try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/lecturer/update?id=${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/lecturer/update`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(lecturerData), // thông tin giảng viên mới
+            body: JSON.stringify(name, id), // thông tin giảng viên mới
         });
 
         if (!res.ok) {
