@@ -18,6 +18,7 @@ import Lecturer from "./pages/Lecturer";
 import Donation from "./pages/Donation";
 import CreateCampaign from "./pages/CreateCampaign";
 import CampaignImages from "./pages/CampaignImages";
+import UpdateCampaign from "./pages/UpdateCampaign";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,10 @@ const router = createBrowserRouter(
       <Route element={<AppLayout />} ErrorBoundary={ErrorFallback}>
         <Route path="/app/campaign" element={<Campaign />} />
         <Route path="/app/campaign/create" element={<CreateCampaign />} />
+        <Route
+          path="/app/campaign/edit/:campaignId"
+          element={<UpdateCampaign />}
+        />
         <Route
           path="/app/campaign/images/:campaignId"
           element={<CampaignImages />}

@@ -12,11 +12,13 @@ import FormRow from "@/ui/FormRow";
 import Input from "@/ui/Input";
 import LecturerDialog from "./LecturerDialog";
 import { useCreateCampaign } from "./useCreateCampaign";
+import { useUpdateCampaign } from "./useUpdateCampaign";
 
-function CreateCampaignForm() {
-  const { mutate: create, isPending } = useCreateCampaign();
+function CreateCampaignForm({ defaultValues = {}, mode = "create" }) {
+  const { mutate: create, isPending: isCreating } = useCreateCampaign();
+  const { mutate: update, isPending: isUpdating } = useUpdateCampaign();
   const { register, handleSubmit, control, formState, reset } = useForm({
-    defaultValues: {},
+    defaultValues,
   });
   const { errors } = formState;
 
@@ -47,11 +49,15 @@ function CreateCampaignForm() {
       postId: Number(data.postId) || null,
       createdBy: 1, // fix later
     };
-    create(requestData, {
-      onSuccess: () => {
-        reset();
-      },
-    });
+    if (mode === "create") {
+      create(requestData, {
+        onSuccess: () => {
+          reset();
+        },
+      });
+    } else {
+      update(requestData);
+    }
   }
 
   return (
@@ -67,7 +73,7 @@ function CreateCampaignForm() {
           {...register("name", {
             required: "Tên chiến dịch không được để trống",
           })}
-          disabled={isPending}
+          disabled={isCreating || isUpdating}
         />
       </FormRow>
       <FormRow label="Mô tả" error={errors?.description?.message}>
@@ -78,7 +84,7 @@ function CreateCampaignForm() {
           {...register("description", {
             required: "Mô tả không được để trống",
           })}
-          disabled={isPending}
+          disabled={isCreating || isUpdating}
         />
       </FormRow>
       <FormRow label="Mục tiêu" error={errors?.targetAmount?.message}>
@@ -97,7 +103,7 @@ function CreateCampaignForm() {
               message: "Số tiền quyên góp ít nhất là 1,000 đ",
             },
           })}
-          disabled={isPending}
+          disabled={isCreating || isUpdating}
         />
       </FormRow>
       <div className="flex flex-col gap-2 md:grid md:grid-cols-[10rem,1fr,1.2fr] md:items-center md:gap-4">
@@ -113,7 +119,7 @@ function CreateCampaignForm() {
                 !closeDateField.value && "text-muted-foreground",
               )}
               id="closeDate"
-              disabled={isPending}
+              disabled={isCreating || isUpdating}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {closeDateField.value ? (
@@ -154,7 +160,7 @@ function CreateCampaignForm() {
               message: "Mã bài viết không hợp lệ",
             },
           })}
-          disabled={isPending}
+          disabled={isCreating || isUpdating}
         />
       </FormRow>
       <div className="flex flex-col gap-2 md:grid md:grid-cols-[10rem,1fr,1.2fr] md:items-center md:gap-4">
@@ -167,17 +173,17 @@ function CreateCampaignForm() {
             name="lecturerName"
             id="lecturerName"
             className="grow"
-            defaultValue={lecturerField.value ? lecturerField.value.name : ""}
+            value={lecturerField.value ? lecturerField.value.name : ""}
             onChange={lecturerField.onChange}
             onBlur={lecturerField.onBlur}
             ref={lecturerField.ref}
             readOnly
-            disabled={isPending}
+            disabled={isCreating || isUpdating}
           />
           <LecturerDialog
             currentLecturer={lecturerField.value}
             onLecturerChosen={lecturerField.onChange}
-            disabled={isPending}
+            disabled={isCreating || isUpdating}
           />
         </div>
         {errors?.lecturer?.message && (
@@ -187,9 +193,9 @@ function CreateCampaignForm() {
       <div>
         <button
           className="rounded-md border-[1px] border-solid border-slate-300 px-4 py-1.5 disabled:bg-slate-200 disabled:text-slate-500"
-          disabled={isPending}
+          disabled={isCreating || isUpdating}
         >
-          Tạo
+          {mode === "create" ? "Tạo" : "Cập nhật"}
         </button>
       </div>
     </form>
