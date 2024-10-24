@@ -81,3 +81,38 @@ export async function createCampaign(campaign) {
     return null;
   }
 }
+
+export async function updateCampaign(campaign) {
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/campaign/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(campaign),
+    });
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
+
+export async function deleteCampaign(id) {
+  const params = {
+    id,
+  };
+  const queryString = "?" + new URLSearchParams(params).toString();
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/campaign/delete${queryString}`,
+      {
+        method: "PUT",
+      },
+    );
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    throw new Error(e.message);
+  }
+}
