@@ -10,6 +10,7 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import ButtonSidebar from "./ButtonSidebar";
 import Sidebar from "./Sidebar";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import DropdownUser from "./DropdownUser";
 
 function AppHeader() {
   const { isOpen, toggleSidebar } = useSidebar();
@@ -42,6 +43,7 @@ function AppHeader() {
           <Sidebar mobile={true} />
         </SheetContent>
       </Sheet>
+      <DropdownUser />
     </header>
   );
 }

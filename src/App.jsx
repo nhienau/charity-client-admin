@@ -19,13 +19,21 @@ import Donation from "./pages/Donation";
 import CreateCampaign from "./pages/CreateCampaign";
 import CampaignImages from "./pages/CampaignImages";
 import UpdateCampaign from "./pages/UpdateCampaign";
+import ProtectedRoute from "./ui/ProtectedRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorFallback />}>
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route element={<AppLayout />} ErrorBoundary={ErrorFallback}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+        ErrorBoundary={ErrorFallback}
+      >
         <Route path="/app/campaign" element={<Campaign />} />
         <Route path="/app/campaign/create" element={<CreateCampaign />} />
         <Route
