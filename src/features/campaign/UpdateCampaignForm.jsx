@@ -26,6 +26,8 @@ function UpdateCampaignForm() {
     closeDate: new Date(data.closeDate),
     targetAmount: data.targetAmount,
     postId: data.postId,
+    disbursementPostId: data.disbursementPostId,
+    postDonationPostId: data.postDonationPostId,
     lecturer: data.lecturer,
   };
 

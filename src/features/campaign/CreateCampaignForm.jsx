@@ -47,6 +47,8 @@ function CreateCampaignForm({ defaultValues = {}, mode = "create" }) {
       closeDateStr: data.closeDate.toISOString(),
       targetAmount: Number(data.targetAmount),
       postId: Number(data.postId) || null,
+      disbursementPostId: Number(data.disbursementPostId) || null,
+      postDonationPostId: Number(data.postDonationPostId) || null,
       createdBy: 1, // fix later
     };
     if (mode === "create") {
@@ -155,6 +157,40 @@ function CreateCampaignForm({ defaultValues = {}, mode = "create" }) {
           name="postId"
           id="postId"
           {...register("postId", {
+            pattern: {
+              value: /^\d+$/,
+              message: "Mã bài viết không hợp lệ",
+            },
+          })}
+          disabled={isCreating || isUpdating}
+        />
+      </FormRow>
+      <FormRow
+        label="Mã bài viết giải ngân"
+        error={errors?.disbursementPostId?.message}
+      >
+        <Input
+          type="text"
+          name="disbursementPostId"
+          id="disbursementPostId"
+          {...register("disbursementPostId", {
+            pattern: {
+              value: /^\d+$/,
+              message: "Mã bài viết không hợp lệ",
+            },
+          })}
+          disabled={isCreating || isUpdating}
+        />
+      </FormRow>
+      <FormRow
+        label="Mã bài viết sau quyên góp"
+        error={errors?.postDonationPostId?.message}
+      >
+        <Input
+          type="text"
+          name="postDonationPostId"
+          id="postDonationPostId"
+          {...register("postDonationPostId", {
             pattern: {
               value: /^\d+$/,
               message: "Mã bài viết không hợp lệ",

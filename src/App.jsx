@@ -19,13 +19,22 @@ import Donation from "./pages/Donation";
 import CreateCampaign from "./pages/CreateCampaign";
 import CampaignImages from "./pages/CampaignImages";
 import UpdateCampaign from "./pages/UpdateCampaign";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import DonorDonation from "./pages/DonorDonation";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route errorElement={<ErrorFallback />}>
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route element={<AppLayout />} ErrorBoundary={ErrorFallback}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+        ErrorBoundary={ErrorFallback}
+      >
         <Route path="/app/campaign" element={<Campaign />} />
         <Route path="/app/campaign/create" element={<CreateCampaign />} />
         <Route
@@ -39,6 +48,7 @@ const router = createBrowserRouter(
         <Route path="/app/lecturer" element={<Lecturer />} />
         <Route path="/app/donation" element={<Donation />} />
         <Route path="/app/user" element={<User />} />
+        <Route path="/app/user/:donorId" element={<DonorDonation />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Route>,
