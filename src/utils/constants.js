@@ -3,6 +3,10 @@ export const MAX_IMAGE_SIZE = 10000000; // 10MB
 
 export const DONOR_FILTER_OPTIONS = [
   {
+    label: "Tất cả",
+    value: "all",
+  },
+  {
     label: "Sinh viên",
     value: "students",
   },

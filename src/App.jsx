@@ -20,6 +20,7 @@ import CreateCampaign from "./pages/CreateCampaign";
 import CampaignImages from "./pages/CampaignImages";
 import UpdateCampaign from "./pages/UpdateCampaign";
 import ProtectedRoute from "./ui/ProtectedRoute";
+import DonorDonation from "./pages/DonorDonation";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
         <Route path="/app/lecturer" element={<Lecturer />} />
         <Route path="/app/donation" element={<Donation />} />
         <Route path="/app/user" element={<User />} />
+        <Route path="/app/user/:donorId" element={<DonorDonation />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Route>,

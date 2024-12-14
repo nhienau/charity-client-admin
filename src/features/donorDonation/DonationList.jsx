@@ -6,13 +6,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import PaginationGroup from "@/ui/PaginationGroup";
+import { useDonorDonation } from "./useDonorDonation";
+import DonationRow from "./DonationRow";
 import Spinner from "@/ui/Spinner";
-import { useDonors } from "./useDonors";
-import DonorRow from "./DonorRow";
+import PaginationGroup from "@/ui/PaginationGroup";
 
-function DonorList() {
-  const { isLoading, data: donors, isFetching } = useDonors();
+function DonationList() {
+  const { isLoading, isFetching, data } = useDonorDonation();
 
   if (isLoading || isFetching)
     return (
@@ -21,21 +21,17 @@ function DonorList() {
       </div>
     );
 
-  const { content } = donors;
-
-  if (content.length === 0) {
-    return <p className="text-center">Không tìm thấy chiến dịch</p>;
-  }
+  const { content } = data;
 
   return (
     <>
       <Table className="text-base">
         <TableHeader>
           <TableRow>
-            <TableHead>Mã sinh viên</TableHead>
+            <TableHead className="w-[25rem]">Chiến dịch</TableHead>
+            <TableHead className="w-[160px] text-right">Số tiền</TableHead>
+            <TableHead>Thời gian</TableHead>
             <TableHead>Tên</TableHead>
-            <TableHead>Số điện thoại</TableHead>
-            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -48,13 +44,15 @@ function DonorList() {
               </TableCell>
             </TableRow>
           ) : (
-            content.map((donor) => <DonorRow donor={donor} key={donor.id} />)
+            content.map((donation) => (
+              <DonationRow donation={donation} key={donation.id} />
+            ))
           )}
         </TableBody>
       </Table>
-      <PaginationGroup pageInfo={donors} />
+      <PaginationGroup pageInfo={data} />
     </>
   );
 }
 
-export default DonorList;
+export default DonationList;
